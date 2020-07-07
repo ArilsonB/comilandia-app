@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, TextInput} from 'react-native';
+import {getRecipes} from '../services';
 import {RecipeList} from '../components';
 import {Style} from '../styles';
 
@@ -7,7 +8,6 @@ const Search = ({route,navigation}) => {
   const [SearchText, setSearchText] = useState();
   const [search, setSearch] = useState('');
   const [recipes, setRecipes] = useState([]);
-  const [error, setError] = useState('');
 
   const searchRecipe = () => {
     setSearch(SearchText);
@@ -17,13 +17,7 @@ const Search = ({route,navigation}) => {
     setSearch(route.params?.search);
   }, [route.params?.search]);
   useEffect(() => {
-    const apiUrl =
-      'http://comilandia.api.192.168.0.156.xip.io/api/v1/receitas?recipe=' +
-      search;
-    fetch(apiUrl)
-      .then((r) => r.json())
-      .then((data) => setRecipes(data))
-      .catch((e) => setError(e));
+    getRecipes(search).then((data) => setRecipes(data));
   }, [search]);
 
   return (
